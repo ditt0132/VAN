@@ -19,7 +19,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("cloud.commandframework:cloud-paper:1.8.4")
-    implementation("dev.jorel:commandapi-bukkit-core:9.5.0")
+    implementation("dev.jorel:commandapi-bukkit-shade:9.5.2")
 }
 
 tasks {
@@ -40,6 +40,15 @@ tasks {
         minecraftVersion("1.20.4")
         jvmArgs = listOf("-Dcom.mojang.eula.agree=true")
     }
+}
+
+tasks.withType<shadowJar> {
+    dependencies {
+        include(dependency("dev.jorel:commandapi-bukkit-shade:9.5.2")
+    }
+    relocate("dev.jorel.commandapi", "van.van.commandapi")
+
+    dependsOn(build)
 }
 
 idea {
