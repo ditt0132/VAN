@@ -1,0 +1,53 @@
+name: VAN
+version: '${project.version}'
+main: van.van.VAN
+api-version: 1.20
+commands:
+  스폰포인트:
+    description: '내 스폰 포인트 봐'
+
+  이전위치:
+    description: '텔레포토 전 위치로 순간이동맨'
+
+  사망이유:
+    description: '뒤진이유를 보여줍니다!!'
+
+  claim:
+    description: '청크묵기'
+
+  abandonclaim:
+    description: '없애기요'
+
+  claims:
+    description: CHUCK DDA MUCK GI
+
+  claiminfo:
+    description: info DDAgi
+
+  플레이타임:
+    description: bogi
+
+  플레이타임제거:
+    description: '플타 제거남'
+
+  로컬채팅:
+    description: gg
+
+  글로벌채팅:
+    description: gg
+
+  플레이타임추가:
+    description: S22
+
+  플레이타임보상리셋:
+    description: '엄 보상리셋;'
+    permission: 내플그.admin
+
+
+permissions:
+  내플그2.admin:
+    description: '내픍르 관리자 궈난 z'
+    default: op
+  내플그1.admin:
+    description: '플그 관리자 궈난 ㅋ'
+    default: op
