@@ -1,17 +1,21 @@
 package van.van.commands;
 
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.parsers.OfflinePlayerArgument;
+import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import van.van.Utils;
 
 public class Commands {
-    public void registerCommands() {
+    public PaperCommandManager<Player> registerCommands(PaperCommandManager<Player> manager) {
         // 예시:
         //   플레이타임: 32시간 27분
-        new CommandAPICommand
         manager.command(manager.commandBuilder("playtime")
                 .argument(OfflinePlayerArgument.optional("player")).handler(ctx -> {
                     OfflinePlayer p = ctx.getOrDefault("player", ctx.getSender());
@@ -31,9 +35,12 @@ public class Commands {
                     .append(Component.text(loc.x()+", "+loc.y()+", "+loc.z()).color(NamedTextColor.GREEN)));
         }));
 
-        manager.command(manager.commandBuilder("g").handler(ctx -> {
-            ctx.getSender()
+        manager.command(manager.commandBuilder("global").handler(ctx -> {
+
         }));
+        manager.command(manager.commandBuilder("global").argument(StringArgument.greedy("message")).handlerno[;(ctx -> {
+
+        }))
 
         return manager;
     }

@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -18,8 +19,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-    compileOnly("cloud.commandframework:cloud-paper:1.8.4")
-    implementation("dev.jorel:commandapi-bukkit-shade:9.5.2")
+    implementation("cloud.commandframework:cloud-paper:1.8.4")
 }
 
 tasks {
@@ -40,15 +40,13 @@ tasks {
         minecraftVersion("1.20.4")
         jvmArgs = listOf("-Dcom.mojang.eula.agree=true")
     }
-}
-
-tasks.withType<shadowJar> {
-    dependencies {
-        include(dependency("dev.jorel:commandapi-bukkit-shade:9.5.2")
+    withType<ShadowJar> {
+        dependsOn(build)
+        dependencies {
+            include(dependency("cloud.commandframework:cloud-paper:1.8.4"))
+        }
+        relocate("cloud.commandframework", "van.van.commandframework")
     }
-    relocate("dev.jorel.commandapi", "van.van.commandapi")
-
-    dependsOn(build)
 }
 
 idea {
