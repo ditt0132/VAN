@@ -48,14 +48,18 @@ public class VAN extends JavaPlugin implements Listener {
 
     private File dataFile;
     private FileConfiguration dataConfig;
-
+    @Override
+    public void onLoad() {
+        CommandAPI.onLoad(new CommandAPIBukkitConfig(this).setNamespace("van"));
+        // Register here!
+    }
+    
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         loadData();
         startPlaytimeScheduler();
         startChunkProtectionScheduler();
-        CommandAPI.onLoad(new CommandAPIBukkitConfig(this).setNamespace());
         CommandAPI.onEnable();
     }
 
