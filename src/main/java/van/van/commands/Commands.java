@@ -7,11 +7,11 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.*;
 import van.van.Utils;
 
-public class CMD {
-    public Commands registerCommands(Commands commands) {
+public class Commands {
+    public void registerCommands() {
         // 예시:
         //   플레이타임: 32시간 27분
-        commands.
+        new CommandAPICommand
         manager.command(manager.commandBuilder("playtime")
                 .argument(OfflinePlayerArgument.optional("player")).handler(ctx -> {
                     OfflinePlayer p = ctx.getOrDefault("player", ctx.getSender());
