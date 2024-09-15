@@ -1,8 +1,5 @@
 package van.van;
 
-import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
-import dev.jorel.commandapi.CommandAPIConfig;
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
@@ -48,9 +45,14 @@ public class VAN extends JavaPlugin implements Listener {
 
     private File dataFile;
     private FileConfiguration dataConfig;
+    public static VAN instance;
 
     @Override
     public void onEnable() {
+        instance = this;
+        // NEW
+        getServer().getPluginManager().registerEvents(new Events(), this);
+        // OLD
         getServer().getPluginManager().registerEvents(this, this);
         loadData();
         startPlaytimeScheduler();
@@ -60,7 +62,6 @@ public class VAN extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         saveData(); // 데이터 저장
-        CommandAPI.onDisable();
         getLogger().info("그거 비활성화함");
     }
 
@@ -85,7 +86,7 @@ public class VAN extends JavaPlugin implements Listener {
                 }
                 break;
 
-            case "이전위치": //
+            case "이전위치": //DONE
                 if (이전위치.containsKey(playerId)) {
                     player.teleport(이전위치.get(playerId));
                     player.sendMessage(ChatColor.GREEN + "이전 위치로 순간이동했어여"); // TP 아닌데 ㅋ
@@ -94,7 +95,7 @@ public class VAN extends JavaPlugin implements Listener {
                 }
                 break;
 
-            case "사망이유":
+            case "사망이유": //DONE
                 if (사망위치.containsKey(playerId)) {
                     Location deathLoc = 사망위치.get(playerId);
                     String deathReason = 사망이유.getOrDefault(playerId, "알 수 없는 이유");
@@ -181,7 +182,7 @@ public class VAN extends JavaPlugin implements Listener {
                 player.sendMessage(ChatColor.GREEN + "님의 플레이타임: " + hours + "시간 " + minutes + "분 " + seconds + "초");
                 break;
 
-            case "플레이타임제거":
+            case "플레이타임제거": //DONE
                 if (player.hasPermission("내플그.admin")) {
                     플레이타임.clear();
                     player.sendMessage(ChatColor.GREEN + "모든 플레이어의 플레이타임이 초기화되었습니다h");
@@ -191,7 +192,7 @@ public class VAN extends JavaPlugin implements Listener {
                 break;
 
 
-            case "플레이타임추가":
+            case "플레이타임추가": //DONE
                 if (sender.hasPermission("playtime.add")) {
                     if (args.length != 2) {
                         player.sendMessage(ChatColor.RED + "사용법: /플레이타임추가 <플레이어명> <초>");
@@ -223,14 +224,14 @@ public class VAN extends JavaPlugin implements Listener {
                 }
                 break;
 
-            case "플레이타임보상리셋":
+            case "플레이타임보상리셋": //?
                 청크보호횟수.put(playerId, 0);
                 마지막청크보호시간.put(playerId, System.currentTimeMillis());
                 player.sendMessage(ChatColor.GREEN + "플레이타임 보상이 리셋되었습니다.");
                 break;
 
 
-            case "로컬채팅":
+            case "로컬채팅": //DONE
                 String currentMode = 채팅모드.getOrDefault(playerId, "global");
                 if ("local".equals(currentMode)) {
                     // 현재 로컬 채팅 모드인 경우 꺼지도록 설정

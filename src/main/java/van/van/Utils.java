@@ -38,4 +38,8 @@ public class Utils {
     public static void sendGlobalChat(Player sender, String message) {
         Bukkit.broadcast(Component.text(message));
     }
+    public static String locationToString(Location loc) {
+        Location l = loc.toBlockLocation();
+        return l.x()+", "+l.y()+", "+l.z();
+    }
 }
