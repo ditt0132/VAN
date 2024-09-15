@@ -43,12 +43,13 @@ public class Commands {
             Utils.sendGlobalChat(ctx.getSender(), "<"+ctx.getSender().getDisplayName()+"> "+ctx.get("message"));
         }));
 
-        manager.command(manager.commandBuilder("global").handler(ctx -> {
-            VariablesStorage.localChat.put(ctx.getSender().getUniqueId(), false);
+        manager.command(manager.commandBuilder("local").handler(ctx -> {
+            VariablesStorage.localChat.put(ctx.getSender().getUniqueId(), true);
         }));
-        manager.command(manager.commandBuilder("global").argument(StringArgument.greedy("message")).handler(ctx -> {
-            Utils.sendGlobalChat(ctx.getSender(), ctx.get("message"));
+        manager.command(manager.commandBuilder("local").argument(StringArgument.greedy("message")).handler(ctx -> {
+            Utils.sendLocalChat(ctx.getSender(), "<"+ctx.getSender().getDisplayName()+"> "+ctx.get("message"));
         }));
+        
 
         return manager;
     }
