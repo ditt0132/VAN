@@ -4,10 +4,8 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VariablesStorage {
     public static Map<UUID, Location> backLocations = new HashMap<>();

@@ -10,7 +10,6 @@ import org.bukkit.scheduler.BukkitTask;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 public class InviteManager {
 
@@ -30,7 +29,7 @@ public class InviteManager {
                         e.getKey().sendMessage(Component.text(e.getValue().getLeft().getName()+"에게 보낸 초대 요청이 만료됐어요!")
                                 .color(NamedTextColor.RED));
                         e.setValue(null);
-                    })); //if wowill this work
+                    })); //will work
         }, 0L, 20L);
     }
 }

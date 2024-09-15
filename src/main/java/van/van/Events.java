@@ -1,5 +1,7 @@
 package van.van;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
+import io.papermc.paper.event.player.ChatEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -19,5 +21,10 @@ public class Events implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e) {
         VariablesStorage.deathLocations.put(e.getPlayer().getUniqueId(), e.getPlayer().getLastDeathLocation());
         VariablesStorage.deathReasons.put(e.getPlayer().getUniqueId(), e.deathMessage());
+    }
+
+    @EventHandler
+    public void onChat(ChatEvent e) {
+        
     }
 }

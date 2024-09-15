@@ -21,9 +21,8 @@ public class Utils {
     public static void sendLocalChat(Player sender, String message) {
         double radius = 300.0;
         Location senderLoc = sender.getLocation();
-        List<Player> nearbyPlayers = Bukkit.getOnlinePlayers().stream()
+        List<Player> nearbyPlayers = senderLoc.getNearbyPlayers(radius).stream()
                 .filter(p -> p != sender)
-                .filter(p -> p.getWorld().equals(sender.getWorld()) && p.getLocation().distance(senderLoc) <= radius)
                 .collect(Collectors.toList());
 
         // 예시:

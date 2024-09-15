@@ -259,6 +259,7 @@ public class VAN extends JavaPlugin implements Listener {
                 .filter(p -> p.getWorld().equals(sender.getWorld()) && p.getLocation().distance(senderLoc) <= radius)
                 .collect(Collectors.toList());
 
+
         for (Player player : nearbyPlayers) {
             player.sendMessage(ChatColor.DARK_GREEN + "[L] " + ChatColor.RESET + sender.getName() + ": " + message);
         }
