@@ -18,7 +18,7 @@ public class Utils {
          // Actually means ticks played so needs convert!
         return p.getStatistic(Statistic.PLAY_ONE_MINUTE) * 20L;
     }
-    public void sendLocalChat(Player sender, String message) {
+    public static void sendLocalChat(Player sender, String message) {
         double radius = 300.0;
         Location senderLoc = sender.getLocation();
         List<Player> nearbyPlayers = Bukkit.getOnlinePlayers().stream()
@@ -35,7 +35,7 @@ public class Utils {
         }
     }
 
-    public void sendGlobalChat(Player sender, String message) {
-        Bukkit.broadcast(Component.text(message))
+    public static void sendGlobalChat(Player sender, String message) {
+        Bukkit.broadcast(Component.text(message));
     }
 }

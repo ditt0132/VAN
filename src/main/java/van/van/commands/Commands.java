@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import van.van.Utils;
+import van.van.VariablesStorage;
 
 public class Commands {
     public PaperCommandManager<Player> registerCommands(PaperCommandManager<Player> manager) {
@@ -36,11 +37,18 @@ public class Commands {
         }));
 
         manager.command(manager.commandBuilder("global").handler(ctx -> {
-
+            VariablesStorage.localChat.put(ctx.getSender().getUniqueId(), false);
         }));
-        manager.command(manager.commandBuilder("global").argument(StringArgument.greedy("message")).handlerno[;(ctx -> {
+        manager.command(manager.commandBuilder("global").argument(StringArgument.greedy("message")).handler(ctx -> {
+            Utils.sendGlobalChat(ctx.getSender(), "<"+ctx.getSender().getDisplayName()+"> "+ctx.get("message"));
+        }));
 
-        }))
+        manager.command(manager.commandBuilder("global").handler(ctx -> {
+            VariablesStorage.localChat.put(ctx.getSender().getUniqueId(), false);
+        }));
+        manager.command(manager.commandBuilder("global").argument(StringArgument.greedy("message")).handler(ctx -> {
+            Utils.sendGlobalChat(ctx.getSender(), ctx.get("message"));
+        }));
 
         return manager;
     }
