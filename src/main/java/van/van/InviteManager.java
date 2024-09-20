@@ -14,7 +14,7 @@ import java.util.Map;
 public class InviteManager {
 
     /* {Sender: [Target, RequestedTime] */
-    public static Map<Player, Pair<Player, Instant>> inviteRequests = new HashMap<>();
+    public static Map<Player, Pair<String, Instant>> inviteRequests = new HashMap<>();
     private static BukkitTask scheduler;
     public static void start() {
         if (scheduler != null) {
@@ -26,7 +26,7 @@ public class InviteManager {
             inviteRequests.entrySet().stream()
                     .filter(e -> e.getValue().getRight().isAfter(Instant.now()))
                     .forEach((e -> {
-                        e.getKey().sendMessage(Component.text(e.getValue().getLeft().getName()+"에게 보낸 초대 요청이 만료됐어요!")
+                        e.getKey().sendMessage(Component.text(e.getValue().getLeft()+"에게 보낸 초대 요청이 만료됐어요!")
                                 .color(NamedTextColor.RED));
                         e.setValue(null);
                     })); //will work
