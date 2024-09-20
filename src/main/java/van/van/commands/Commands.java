@@ -17,9 +17,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.util.permissions.CommandPermissions;
-import van.van.InviteManager;
-import van.van.Utils;
-import van.van.VariablesStorage;
+import van.van.*;
 
 import java.time.Instant;
 
@@ -33,7 +31,7 @@ public class Commands {
                     ctx.getSender().sendMessage(
                             Component.text("플레이타임: ").append(
                                     Component.text(DurationFormatUtils.formatDuration(
-                                            Utils.getPlaytime(p) * 1000, "H:mm", true))
+                                            Utils.getPlaytime(p).toMillis(), "H:mm", true))
                                             .color(NamedTextColor.GREEN)
                             ));
                 }));
@@ -85,15 +83,25 @@ public class Commands {
 
         manager.command(manager.commandBuilder("invite").argument(PlayerArgument.of("player")).handler(ctx -> {
             if (((Player) ctx.get("player")).getUniqueId() == ctx.getSender().getUniqueId()) {
-                ctx.getSender().sendMessage(Component.text("본인에게 초대 요청을 보낼 수 없어요!").color(NamedTextColor.RED));
+                ctx.getSender().sendMessage(Component.text("자기 자신에게 초대 요청을 보낼 수 없어요!").color(NamedTextColor.RED));
                 return;
             }
-
-            InviteManager.inviteRequests.put(ctx.getSender(), Pair.of(Bukkit.getPlayer((String) ctx.get("player")), Instant.now()));
+            InviteManager.inviteRequests.add(new PlayerPair(ctx.getSender(), ctx.get("player")));
         }));
 
-        //TODO: claim, invite/tpahere
-
+        //TODO: claim, invite/tpahere, slimechunk
+        manager.command(manager.commandBuilder("w")
+                .argument(PlayerArgument.of("player")).argument(StringArgument.greedy("message"))
+                .handler(ctx -> {
+                    ((Player) ctx.get("player")).sendMessage(VAN.mm.deserialize(
+                            "<dark_gray>[<gray>%s</gray>-><gray>me</gray>]<white> %s"
+                                    .formatted(((Player) ctx.get("player")).getName(), ctx.get("messge"))
+                    ));
+                    ctx.getSender().sendMessage(VAN.mm.deserialize(
+                            "<dark_gray>[me-><gray>%s</gray>]<white> %s"
+                                    .formatted(((Player) ctx.get("player")).getName(), ctx.get("messge"))
+                    ));
+                }));
         return manager;
     }
 

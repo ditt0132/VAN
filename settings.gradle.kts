@@ -1,4 +1,4 @@
-rootProject.name = "hardcore"
+rootProject.name = "VAN"
 
 pluginManagement {
     repositories {

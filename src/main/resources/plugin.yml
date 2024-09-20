@@ -2,6 +2,7 @@ name: VAN
 version: '${project.version}'
 main: van.van.VAN
 api-version: 1.20
+depend: [GriefPrevention]
 commands:
   스폰포인트:
     description: '내 스폰 포인트 봐'

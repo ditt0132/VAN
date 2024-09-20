@@ -1,10 +1,14 @@
 package van.van;
 
+import io.papermc.paper.util.Tick;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +18,9 @@ public class Utils {
     public static final String TIME_FORMAT = "HH:mm:ss";
     public static final String TIME_WITHOUT_SECONDS = "HH:mm";
 
-    public static long getPlaytime(OfflinePlayer p) {
+    public static Duration getPlaytime(OfflinePlayer p) {
          // Actually means ticks played so needs convert!
-        return p.getStatistic(Statistic.PLAY_ONE_MINUTE) * 20L;
+        return Tick.of(p.getStatistic(Statistic.PLAY_ONE_MINUTE));
     }
     public static void sendLocalChat(Player sender, String message) {
         double radius = 300.0;
@@ -40,5 +44,9 @@ public class Utils {
     public static String locationToString(Location loc) {
         Location l = loc.toBlockLocation();
         return l.x()+", "+l.y()+", "+l.z();
+    }
+    public static String boolToChar(boolean bool) {
+        if (bool) return "T";
+        else return "F";
     }
 }

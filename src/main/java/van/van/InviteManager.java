@@ -14,7 +14,7 @@ import java.util.Map;
 public class InviteManager {
 
     /* {Sender: [Target, RequestedTime] */
-    public static Map<Player, Pair<String, Instant>> inviteRequests = new HashMap<>();
+    public static Set<PlayerPair> inviteRequests = new HashSet<>();
     private static BukkitTask scheduler;
     public static void start() {
         if (scheduler != null) {
@@ -23,13 +23,11 @@ public class InviteManager {
         }
 
         scheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(VAN.instance, ()->{
-            inviteRequests.entrySet().stream()
-                    .filter(e -> e.getValue().getRight().isAfter(Instant.now()))
-                    .forEach((e -> {
-                        e.getKey().sendMessage(Component.text(e.getValue().getLeft()+"에게 보낸 초대 요청이 만료됐어요!")
-                                .color(NamedTextColor.RED));
-                        e.setValue(null);
-                    })); //will work
-        }, 0L, 20L);
+            inviteRequests.forEach(p -> {
+                if (p.getTimestamp().isAfter(Instant.now())) {
+                    p.getLeft().sendMessage(VAN.mm.deserialize("<red>%s<white>에게 보낸 초대 요청이 <red>만료<white>됐어요!"));
+                }
+            });//1트만에 되면 팬티벗고 소리지름 ㄹㅇ
+        }, 0L, 60L);
     }
 }

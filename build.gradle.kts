@@ -15,11 +15,13 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.org/repository/maven-public/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     implementation("cloud.commandframework:cloud-paper:1.8.4")
+    compileOnly("com.github.GriefPrevention:GriefPrevention:17.0.0")
 }
 
 tasks {

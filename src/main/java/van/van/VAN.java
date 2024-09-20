@@ -2,6 +2,7 @@ package van.van;
 
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -41,6 +42,8 @@ public class VAN extends JavaPlugin implements Listener {
     private HashMap<UUID, String> 사망이유 = new HashMap<>();
     private HashMap<UUID, Long> 마지막청크보호갱신시간 = new HashMap<>();
     private HashMap<UUID, Long> 마지막청크보호시간 = new HashMap<>();
+
+    public static MiniMessage mm = MiniMessage.miniMessage();
 
 
     private File dataFile;
