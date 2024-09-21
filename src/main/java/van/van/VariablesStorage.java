@@ -38,7 +38,7 @@ public class VariablesStorage {
 
             for (String key : config.getConfigurationSection("lastRewardedTimes").getKeys(false)) {
                 UUID uuid = UUID.fromString(key);
-                ClaimManager.lastRewardedTimes.put(uuid, (Duration) config.get("lastRewardedTimes." + key));
+                ClaimManager.lastRewardedTimes.put(uuid, Duration.ofSeconds(config.getLong("lastRewardedTimes." + key)));
             }
 
             for (String key : config.getConfigurationSection("claimCount").getKeys(false)) {
@@ -50,7 +50,7 @@ public class VariablesStorage {
         }
     }
 
-    public static void saveData() {
+    public static void saveData() { //TODO: 이거 고치기, 데이터가 없다면 섹션이 통채로 날라감
         for (UUID uuid : backLocations.keySet()) {
             config.set("backLocations." + uuid.toString(), backLocations.get(uuid));
         }
@@ -60,7 +60,7 @@ public class VariablesStorage {
         }
 
         for (UUID uuid : ClaimManager.lastRewardedTimes.keySet()) {
-            config.set("lastRewardedTimes."+uuid.toString(), ClaimManager.lastRewardedTimes.get(uuid));
+            config.set("lastRewardedTimes."+uuid.toString(), ClaimManager.lastRewardedTimes.get(uuid).toSeconds());
         }
 
         for (UUID uuid : ClaimManager.claimCount.keySet()) {
