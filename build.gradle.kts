@@ -8,7 +8,7 @@ plugins {
     id("com.gradleup.shadow") version "8.3.1"
 }
 
-group = "van.van"
+    group = "van.van"
 version = "1.0"
 
 repositories {
@@ -20,13 +20,20 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-    implementation("cloud.commandframework:cloud-paper:1.8.4")
-    compileOnly("com.github.GriefPrevention:GriefPrevention:17.0.0")
+    implementation("org.incendo:cloud-paper:2.0.0-beta.10")
+    implementation("org.incendo:cloud-core:2.0.0")
+    compileOnly("com.github.GriefPrevention:GriefPrevention:16.18.3")
 }
 
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    withType<JavaCompile> {
+        options.encoding = "UTF-8"
+    }
+    compileJava {
+        options.encoding = "UTF-8"
     }
     processResources {
         filesMatching("**/*.yml") {
@@ -41,13 +48,14 @@ tasks {
     runServer {
         minecraftVersion("1.20.4")
         jvmArgs = listOf("-Dcom.mojang.eula.agree=true")
+        dependsOn(shadowJar)
     }
     withType<ShadowJar> {
         dependsOn(build)
-        dependencies {
-            include(dependency("cloud.commandframework:cloud-paper:1.8.4"))
-        }
-        relocate("cloud.commandframework", "van.van.commandframework")
+//        dependencies {
+//            include(dependency("org.incendo:cloud-paper:2.0.0-beta.10"))
+//            include(dependency("org.incendo:cloud-core:2.0.0"))
+//        }
     }
 }
 

@@ -77,10 +77,20 @@ public class ClaimManager {
                         .minus(lastRewardedTimes.getOrDefault(p.getUniqueId(), Duration.ZERO))
                         .compareTo(Duration.ofHours(1)) >= 0) { //마지막 지급으로부터 1시간이 경과했으면
                     claimCount.put(p.getUniqueId(), claimCount.getOrDefault(p.getUniqueId(), 1) + 1);
-                    // 대충 클레임 늘려주는거
+                    lastRewardedTimes.put(p.getUniqueId(), Duration.ZERO);
                 }
+                lastRewardedTimes.put(p.getUniqueId(),
+                        lastRewardedTimes.getOrDefault(p.getUniqueId(), Duration.ZERO).plusMinutes(1));
             }
         }, 0, 1200); //1분
+        /*
+        로직 설명:
+        마지막 지급 시간으로부터 1시간이 경과했으면:
+          클레임 갯수를 추가함
+          지급 시간을 리셋함(0)
+        Finally (무조건):
+          마지막 지급 시간에 1분을 추가함
+         */
     }
 
 }

@@ -25,6 +25,11 @@ public class Events implements Listener {
 
     @EventHandler
     public void onChat(ChatEvent e) {
-        
+        if (VariablesStorage.localChat.getOrDefault(e.getPlayer().getUniqueId(), true)) {
+            Utils.sendLocalChat(e.getPlayer(), e.message());
+        } else {
+            Utils.sendGlobalChat(e.getPlayer(), e.message());
+        }
+        e.setCancelled(true);
     }
 }

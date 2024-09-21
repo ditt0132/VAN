@@ -1,7 +1,5 @@
 package van.van;
 
-import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,18 +7,21 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.incendo.cloud.execution.ExecutionCoordinator;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import van.van.commands.ClaimCommands;
+import van.van.commands.Commands;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,19 +54,31 @@ public class VAN extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+            VariablesStorage.loadData();
         // NEW
         getServer().getPluginManager().registerEvents(new Events(), this);
+
+        LegacyPaperCommandManager<CommandSender> mgr = LegacyPaperCommandManager
+                .createNative(this, ExecutionCoordinator.simpleCoordinator());
+
+        Commands.registerCommands(mgr);
+        ClaimCommands.registerCommands(mgr);
+        ClaimManager.registerScheduler();
+        //TODO: make saving system for VariablesStorage, ClaimManager maybe complete
+        /*
         // OLD
         getServer().getPluginManager().registerEvents(this, this);
         loadData();
         startPlaytimeScheduler();
         startChunkProtectionScheduler();
+        */
+        //TODO: Deprecate this
     }
 
     @Override
     public void onDisable() {
-        saveData(); // 데이터 저장
-        getLogger().info("그거 비활성화함");
+        VariablesStorage.saveData();
+        getLogger().info("저장 다했음 그리고 그거 비활성화함");
     }
 
     @Override
@@ -284,7 +297,6 @@ public class VAN extends JavaPlugin implements Listener {
                     long lastPlayTime = 플레이타임.getOrDefault(playerId, currentTime);
                     long newPlayTime = 플레이타임.getOrDefault(playerId, 0L) + 1000; // 1초 증가
                     플레이타임.put(playerId, newPlayTime);
-                    player.playtime
                 }
             }
         }.runTaskTimer(this, 0L, 20L); // 1초마다 (20틱)

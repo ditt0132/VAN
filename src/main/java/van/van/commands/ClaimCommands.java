@@ -1,35 +1,34 @@
 package van.van.commands;
 
-import cloud.commandframework.paper.PaperCommandManager;
 import me.ryanhamshire.GriefPrevention.Claim;
-import me.ryanhamshire.GriefPrevention.ClaimPermission;
 import me.ryanhamshire.GriefPrevention.CreateClaimResult;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import van.van.ClaimManager;
-import static net.kyori.adventure.text.Component.text;
 
 import java.util.Collection;
 
+import static net.kyori.adventure.text.Component.text;
+
 public class ClaimCommands {
-    public PaperCommandManager<Player> registerCommands(PaperCommandManager<Player> manager) {
+    public static LegacyPaperCommandManager<CommandSender> registerCommands(LegacyPaperCommandManager<CommandSender> manager) {
         manager.command(manager.commandBuilder("claim")
+                .senderType(Player.class)
                 .handler(ctx -> {
-                    CreateClaimResult r = ClaimManager.createClaim(ctx.getSender().getChunk(), ctx.getSender());
+                    CreateClaimResult r = ClaimManager.createClaim(ctx.sender().getChunk(), ctx.sender());
                     if (r != null && r.succeeded) {
-                        ctx.getSender().sendMessage(text("영역을 ").append(text("보호").color(NamedTextColor.GREEN))
+                        ctx.sender().sendMessage(text("영역을 ").append(text("보호").color(NamedTextColor.GREEN))
                                 .append(text("했어요!").color(NamedTextColor.WHITE)));
                         // "영역을 보호했어요!" 아오 ComponentAPI 보기 개불편하네
                     }
                 }));
-        manager.command(manager.commandBuilder("abandonclaim").handler(ctx -> {
-            Player p = ctx.getSender();
+        manager.command(manager.commandBuilder("abandonclaim").senderType(Player.class).handler(ctx -> {
+            Player p = ctx.sender();
             Collection<Claim> claims = GriefPrevention.instance.dataStore.getClaims(p.getChunk().getX(), p.getChunk().getZ());
             if (claims.size() > 1) { //1보다 크면
                 p.sendMessage(text("심각한 문제가 발생했어요. 현재 좌표, 오류 내용과 함께 관리자에게 문의해주세요").decorate(TextDecoration.BOLD).color(NamedTextColor.DARK_RED).appendNewline()
@@ -42,8 +41,8 @@ public class ClaimCommands {
             }
         }));
 
-        manager.command(manager.commandBuilder("chunkinfo").handler(ctx -> {
-            Player p = ctx.getSender();
+        manager.command(manager.commandBuilder("chunkinfo").senderType(Player.class).handler(ctx -> {
+            Player p = ctx.sender();
             MiniMessage mm = MiniMessage.miniMessage();
 
             p.sendMessage(mm.deserialize("청크 <green>%d</green>, <green>%d</green>:".formatted(p.getChunk().getX(), p.getChunk().getZ())));
