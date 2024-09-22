@@ -26,24 +26,33 @@ public class VariablesStorage {
     public static void loadData() {
         if (!dataFile.exists()) return;
         try {
+            System.out.println("Loading data");
             for (String key : config.getConfigurationSection("backLocations").getKeys(false)) {
+                System.out.println("bl");
                 UUID uuid = UUID.fromString(key);
                 backLocations.put(uuid, config.getLocation("backLocations." + key));
+                System.out.println(key+" "+backLocations.get(uuid));
             }
 
             for (String key : config.getConfigurationSection("deathLocations").getKeys(false)) {
+                System.out.println("dl");
                 UUID uuid = UUID.fromString(key);
                 deathLocations.put(uuid, config.getLocation("deathLocations." + key));
+                System.out.println(key+" "+backLocations.get(uuid));
             }
 
             for (String key : config.getConfigurationSection("lastRewardedTimes").getKeys(false)) {
+                System.out.println("lrt");
                 UUID uuid = UUID.fromString(key);
                 ClaimManager.lastRewardedTimes.put(uuid, Duration.ofSeconds(config.getLong("lastRewardedTimes." + key)));
+                System.out.println(key+" "+backLocations.get(uuid));
             }
 
             for (String key : config.getConfigurationSection("claimCount").getKeys(false)) {
+                System.out.println("cc");
                 UUID uuid = UUID.fromString(key);
                 ClaimManager.claimCount.put(uuid, config.getInt("claimCount." + key));
+                System.out.println(key+" "+backLocations.get(uuid));
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -51,26 +60,32 @@ public class VariablesStorage {
     }
 
     public static void saveData() { //TODO: 이거 고치기, 데이터가 없다면 섹션이 통채로 날라감
-        for (UUID uuid : backLocations.keySet()) {
-            config.set("backLocations." + uuid.toString(), backLocations.get(uuid));
-        }
-
-        for (UUID uuid : deathLocations.keySet()) {
-            config.set("deathLocations." + uuid.toString(), deathLocations.get(uuid));
-        }
-
-        for (UUID uuid : ClaimManager.lastRewardedTimes.keySet()) {
-            config.set("lastRewardedTimes."+uuid.toString(), ClaimManager.lastRewardedTimes.get(uuid).toSeconds());
-        }
-
-        for (UUID uuid : ClaimManager.claimCount.keySet()) {
-            config.set("claimCount."+uuid.toString(), ClaimManager.claimCount.get(uuid));
-        }
-
-        try {
-            config.save(dataFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Saving data");
+        config.createSection("backLocations", backLocations);
+        config.createSection("deathLocations", deathLocations);
+        config.createSection("lastRewardedTimes", ClaimManager.lastRewardedTimes);
+        config.createSection("claimCount", ClaimManager.claimCount);
+//
+//        for (UUID uuid : backLocations.keySet()) {
+//            config.set("backLocations." + uuid.toString(), backLocations.get(uuid));
+//        }
+//
+//        for (UUID uuid : deathLocations.keySet()) {
+//            config.set("deathLocations." + uuid.toString(), deathLocations.get(uuid));
+//        }
+//
+//        for (UUID uuid : ClaimManager.lastRewardedTimes.keySet()) {
+//            config.set("lastRewardedTimes."+uuid.toString(), ClaimManager.lastRewardedTimes.get(uuid).toSeconds());
+//        }
+//
+//        for (UUID uuid : ClaimManager.claimCount.keySet()) {
+//            config.set("claimCount."+uuid.toString(), ClaimManager.claimCount.get(uuid));
+//        }
+//
+//        try {
+//            config.save(dataFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

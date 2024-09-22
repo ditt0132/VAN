@@ -54,10 +54,10 @@ public class VAN extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
-            VariablesStorage.loadData();
+
         // NEW
         getServer().getPluginManager().registerEvents(new Events(), this);
-
+        VariablesStorage.loadData();
         LegacyPaperCommandManager<CommandSender> mgr = LegacyPaperCommandManager
                 .createNative(this, ExecutionCoordinator.simpleCoordinator());
 

