@@ -2,25 +2,16 @@ package van.van;
 
 import io.papermc.paper.util.Tick;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Utils {
-    public static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
-    public static final String DATE_WITHOUT_SECONDS = "yyyy.MM.dd HH:mm";
-    public static final String TIME_FORMAT = "HH:mm:ss";
-    public static final String TIME_WITHOUT_SECONDS = "HH:mm";
 
     public static Duration getPlaytime(OfflinePlayer p) {
          // Actually means ticks played so needs convert!

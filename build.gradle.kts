@@ -8,7 +8,7 @@ plugins {
     id("com.gradleup.shadow") version "8.3.1"
 }
 
-    group = "van.van"
+group = "van.van"
 version = "1.0"
 
 repositories {

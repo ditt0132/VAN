@@ -13,6 +13,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class VariablesStorage {
     private static File dataFile = new File("plugins/VAN/data.yml");
@@ -38,14 +39,14 @@ public class VariablesStorage {
                 System.out.println("dl");
                 UUID uuid = UUID.fromString(key);
                 deathLocations.put(uuid, config.getLocation("deathLocations." + key));
-                System.out.println(key+" "+backLocations.get(uuid));
+                System.out.println(key+" "+deathLocations.get(uuid));
             }
 
             for (String key : config.getConfigurationSection("lastRewardedTimes").getKeys(false)) {
                 System.out.println("lrt");
                 UUID uuid = UUID.fromString(key);
                 ClaimManager.lastRewardedTimes.put(uuid, Duration.ofSeconds(config.getLong("lastRewardedTimes." + key)));
-                System.out.println(key+" "+backLocations.get(uuid));
+                System.out.println(key+" "+ClaimManager.lastRewardedTimes.get(uuid));
             }
 
             for (String key : config.getConfigurationSection("claimCount").getKeys(false)) {
@@ -59,12 +60,20 @@ public class VariablesStorage {
         }
     }
 
-    public static void saveData() { //TODO: 이거 고치기, 데이터가 없다면 섹션이 통채로 날라감
+    public static void saveData() {
         System.out.println("Saving data");
         config.createSection("backLocations", backLocations);
         config.createSection("deathLocations", deathLocations);
-        config.createSection("lastRewardedTimes", ClaimManager.lastRewardedTimes);
+        config.createSection("lastRewardedTimes", ClaimManager.lastRewardedTimes.entrySet().stream().collect(
+                Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toSeconds())
+        ));
         config.createSection("claimCount", ClaimManager.claimCount);
+
+        try {
+            config.save(dataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //
 //        for (UUID uuid : backLocations.keySet()) {
 //            config.set("backLocations." + uuid.toString(), backLocations.get(uuid));

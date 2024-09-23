@@ -1,8 +1,6 @@
 package van.van.commands;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -22,10 +20,7 @@ import van.van.*;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Commands {
     public static LegacyPaperCommandManager<CommandSender> registerCommands(LegacyPaperCommandManager<CommandSender> manager) {
@@ -110,14 +105,14 @@ public class Commands {
                     ctx.sender().sendPlainMessage(target.getClientBrandName() == null ? "null" : target.getClientBrandName());
                 }));
 
-        manager.command(manager.commandBuilder("invite")
-                .senderType(Player.class).required("player", PlayerParser.playerParser()).handler(ctx -> {
-            if (((Player) ctx.get("player")).getUniqueId() == ctx.sender().getUniqueId()) {
-                ctx.sender().sendMessage(Component.text("자기 자신에게 초대 요청을 보낼 수 없어요!").color(NamedTextColor.RED));
-                return;
-            }
-            InviteManager.inviteRequests.add(new PlayerPair(ctx.sender(), ctx.get("player")));
-        }));
+//        manager.command(manager.commandBuilder("invite")
+//                .senderType(Player.class).required("player", PlayerParser.playerParser()).handler(ctx -> {
+//            if (((Player) ctx.get("player")).getUniqueId() == ctx.sender().getUniqueId()) {
+//                ctx.sender().sendMessage(Component.text("자기 자신에게 초대 요청을 보낼 수 없어요!").color(NamedTextColor.RED));
+//                return;
+//            }
+//            InviteManager.inviteRequests.add(new PlayerPair(ctx.sender(), ctx.get("player")));
+//        }));
 
         //TODO: make chunkinfo provide more information, cancel, reject, accept [player], send message to inviter, invited
         manager.command(manager.commandBuilder("w", "tell", "msg")
