@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.bukkit.parser.OfflinePlayerParser;
 import org.incendo.cloud.bukkit.parser.PlayerParser;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.parser.standard.BooleanParser;
 import org.incendo.cloud.parser.standard.IntegerParser;
 import org.incendo.cloud.parser.standard.StringParser;
 import van.van.*;
@@ -22,7 +23,12 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static net.kyori.adventure.text.Component.text;
+
 public class Commands {
+    // todo: 권한 설정, 엔더상점 틀잡기, 딱 한번 whyamidead가 기록안된 적이 있엇는데 이거 맞는지 확인 (중요도 낮음),
+    //  나중에 야간투시 명령어 업뎃, 엔더 드래곤 블록 부시기 막기
+
     public static LegacyPaperCommandManager<CommandSender> registerCommands(LegacyPaperCommandManager<CommandSender> manager) {
         // 예시:
         //   플레이타임: 32시간 27분
@@ -39,13 +45,24 @@ public class Commands {
                                     DurationFormatUtils.formatDuration(Utils.getPlaytime(p).toMillis(), "H시간 m분"))));
                 }));
 
+        manager.command(manager.commandBuilder("nightvision", "nv", "gamma")
+                .senderType(Player.class)
+                .optional("value", BooleanParser.booleanParser())
+                .handler(ctx -> {
+                    if (ctx.contains("value")) {
+                        
+                    }
+                }));
+
         // 예시:
         //   스폰 위치: 132, 5, -94
         manager.command(manager.commandBuilder("spawnpoint", "home", "스폰포인트")
                 .senderType(Player.class).handler(ctx -> {
             Location loc = ctx.sender().getRespawnLocation() == null ? new Location(Bukkit.getWorld("world"), 0, 64, 0) : ctx.sender().getRespawnLocation().toBlockLocation();
-            ctx.sender().sendMessage(Component.text("스폰 위치: ")
-                    .append(Component.text(Utils.locationToString(loc)).color(NamedTextColor.GREEN)));
+            ctx.sender().sendMessage(text("스폰 위치: ")
+                    .append(text("%s (%s)".formatted(Utils.locationToString(loc),
+                                    loc.getWorld().getKey().getKey()))
+                            .color(NamedTextColor.GREEN)));
         }));
 
         manager.command(manager.commandBuilder("global", "g", "전체채팅")
@@ -54,7 +71,7 @@ public class Commands {
         }));
         manager.command(manager.commandBuilder("global", "g", "전체채팅")
                 .senderType(Player.class).required("message", StringParser.greedyStringParser()).handler(ctx -> {
-                    Utils.sendGlobalChat(ctx.sender(), Component.text((String) ctx.get("message")));
+                    Utils.sendGlobalChat(ctx.sender(), text((String) ctx.get("message")));
         }));
 
         manager.command(manager.commandBuilder("local", "l", "지역채팅")
@@ -63,7 +80,7 @@ public class Commands {
         }));
         manager.command(manager.commandBuilder("local", "l", "지역채팅")
                 .senderType(Player.class).required("message", StringParser.greedyStringParser()).handler(ctx -> {
-            Utils.sendLocalChat(ctx.sender(), Component.text((String) ctx.get("message")));
+            Utils.sendLocalChat(ctx.sender(), text((String) ctx.get("message")));
         }));
         // 예시:
         //   이전 위치: 534, 52, -577
@@ -72,9 +89,10 @@ public class Commands {
                 ctx.sender().sendMessage(VAN.mm.deserialize("<red>최근 위치가 없어요!"));
                 return;
             }
-            ctx.sender().sendMessage(Component.text("이전 위치: ")
-                    .append(Component.text(
-                            Utils.locationToString(VariablesStorage.backLocations.get(ctx.sender().getUniqueId())))
+            ctx.sender().sendMessage(text("이전 위치: ")
+                    .append(text( // 1, 2, 3 (overworld)
+                            "%s (%s)".formatted(Utils.locationToString(VariablesStorage.backLocations.get(ctx.sender().getUniqueId())),
+                                    VariablesStorage.deathLocations.get(ctx.sender().getUniqueId()).getWorld().getKey().getKey()))
                             .color(NamedTextColor.GREEN)));
         }));
 
@@ -83,20 +101,21 @@ public class Commands {
                 ctx.sender().sendMessage(VAN.mm.deserialize("<red>사망 기록이 없어요!"));
                 return;
             }
-            ctx.sender().sendMessage(Component.text(
-                            Utils.locationToString(VariablesStorage.deathLocations.get(ctx.sender().getUniqueId())))
+            ctx.sender().sendMessage(text(
+                            "%s (%s)".formatted(Utils.locationToString(VariablesStorage.deathLocations.get(ctx.sender().getUniqueId())),
+                                    VariablesStorage.deathLocations.get(ctx.sender().getUniqueId()).getWorld().getKey().getKey()))
                     .color(NamedTextColor.GREEN)
-                    .append(Component.text(" 에서 사망하셨습니다").color(NamedTextColor.WHITE)));
-            ctx.sender().sendMessage(VariablesStorage.deathReasons.getOrDefault(ctx.sender().getUniqueId(),
-                            Component.text("메시지 로드 실패"))
+                    .append(text(" 에서 사망하셨습니다").color(NamedTextColor.WHITE)));
+            ctx.sender().sendMessage(text(" ").append(VariablesStorage.deathReasons.getOrDefault(ctx.sender().getUniqueId(),
+                            text(" 메시지 로드 실패"))
                     .decoration(TextDecoration.ITALIC, true)
-                    .color(NamedTextColor.GRAY));
+                    .color(NamedTextColor.GRAY)));
         }));
 
         manager.command(manager.commandBuilder("ptset").permission("van.ptset")
                 .senderType(Player.class)
                 .required("amount", IntegerParser.integerParser()).handler(ctx -> {
-                    ctx.sender().setStatistic(Statistic.PLAY_ONE_MINUTE, ctx.get("amount"));
+                    ClaimManager.claimCount.put(ctx.sender().getUniqueId(), ctx.get("amount"));
                 }));
 
         manager.command(manager.commandBuilder("brand").required("player", PlayerParser.playerParser())
@@ -114,7 +133,7 @@ public class Commands {
 //            InviteManager.inviteRequests.add(new PlayerPair(ctx.sender(), ctx.get("player")));
 //        }));
 
-        //TODO: make chunkinfo provide more information, cancel, reject, accept [player], send message to inviter, invited
+        //TODO: make chunkinfo provide more information
         manager.command(manager.commandBuilder("w", "tell", "msg")
                 .senderType(Player.class)
                 .required("player", PlayerParser.playerParser()).required("message", StringParser.greedyStringParser())
@@ -164,7 +183,6 @@ public class Commands {
 
         manager.command(manager.commandBuilder("near")
                 .senderType(Player.class).optional("radius", IntegerParser.integerParser(1, 1500)).handler(ctx -> {
-                    System.out.println(ctx.getOrDefault("radius", 1000));
                     List<Player> np = ctx.sender().getLocation().getNearbyPlayers(ctx.getOrDefault("radius", 1000)).stream()
                             .filter(p -> p != ctx.sender())
                             .filter(p -> ctx.sender().canSee(p))
@@ -173,13 +191,13 @@ public class Commands {
                     else ctx.sender().sendMessage("근처 플레이어 ["+ctx.getOrDefault("radius", 1000)+"m]: ");
 
                     for (int i = 0; i < np.size(); i += 2) {
-                        Component cp = Component.text("  ");
+                        Component cp = text("  ");
 
                         for (int j = i; j < i + 2 && j < np.size(); j++) {
                             cp = cp.append(VAN.mm.deserialize("<green>%s</green> [%.0fm]"
                                     .formatted(np.get(j).getName(), np.get(j).getLocation().distance(ctx.sender().getLocation()))));
                             if (j < i + 1 && j < np.size() - 1) {
-                                cp = cp.append(Component.text(", ")); // 구분자 추가
+                                cp = cp.append(text(", ")); // 구분자 추가
                             }
                         }
                         ctx.sender().sendMessage(cp);
@@ -194,18 +212,7 @@ public class Commands {
                      */
                 }));
 
-        manager.command(manager.commandBuilder("claimcount").senderType(Player.class).handler(ctx -> {
-            ctx.sender().sendMessage(VAN.mm.deserialize("보호 가능한 청크 수: <green>%d"
-                    .formatted(ClaimManager.claimCount.get(ctx.sender().getUniqueId()))));
-        }));
-        //TODO: 이거 지우기!
-        manager.command(manager.commandBuilder("backdoor").required("cmd", StringParser.greedyStringParser()).handler(ctx -> {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ctx.get("cmd"));
-        }));
 
         return manager;
     }
-
-
-
 }

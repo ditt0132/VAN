@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "van.van"
-version = "1.0"
+version = "1.1"
 
 repositories {
     mavenCentral()
@@ -24,6 +24,7 @@ dependencies {
     implementation("org.incendo:cloud-core:2.0.0")
     compileOnly("com.github.GriefPrevention:GriefPrevention:16.18.3")
 }
+
 tasks.withType(xyz.jpenilla.runtask.task.AbstractRun::class) {
     javaLauncher = javaToolchains.launcherFor {
         vendor = JvmVendorSpec.JETBRAINS

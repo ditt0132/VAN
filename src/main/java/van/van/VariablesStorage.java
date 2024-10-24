@@ -2,6 +2,8 @@ package van.van;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -42,6 +44,14 @@ public class VariablesStorage {
                 System.out.println(key+" "+deathLocations.get(uuid));
             }
 
+            for (String key : config.getConfigurationSection("deathReasons").getKeys(false)) {
+                System.out.println("dr");
+                UUID uuid = UUID.fromString(key);
+                deathReasons.put(uuid, JSONComponentSerializer.json().deserialize(config.getString("deathReasons." + key,
+                        "{\"text\":\"메시지 로드 실패\",\"color\":\"gray\"}")));
+                System.out.println(key+" "+ PlainTextComponentSerializer.plainText().serialize(deathReasons.get(uuid)));
+            }
+
             for (String key : config.getConfigurationSection("lastRewardedTimes").getKeys(false)) {
                 System.out.println("lrt");
                 UUID uuid = UUID.fromString(key);
@@ -53,8 +63,9 @@ public class VariablesStorage {
                 System.out.println("cc");
                 UUID uuid = UUID.fromString(key);
                 ClaimManager.claimCount.put(uuid, config.getInt("claimCount." + key));
-                System.out.println(key+" "+backLocations.get(uuid));
+                System.out.println(key+" "+ClaimManager.claimCount.get(uuid));
             }
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -64,6 +75,9 @@ public class VariablesStorage {
         System.out.println("Saving data");
         config.createSection("backLocations", backLocations);
         config.createSection("deathLocations", deathLocations);
+        config.createSection("deathReasons", deathReasons.entrySet().stream().collect(
+                Collectors.toMap(Map.Entry::getKey, e -> JSONComponentSerializer.json().serialize(e.getValue()))
+        ));
         config.createSection("lastRewardedTimes", ClaimManager.lastRewardedTimes.entrySet().stream().collect(
                 Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toSeconds())
         ));
